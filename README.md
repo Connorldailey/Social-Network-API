@@ -38,6 +38,8 @@ To install the project locally, follow the steps below:
 
 ## Usage
 
+[Demonstration and Usage Overview](https://drive.google.com/file/d/1s-gHZk_9C94Q72FKt1rD8f3SYQCCOy4-/view?usp=drive_link)
+
 - Use an API testing tool like **Insomnia** or **Postman** to interact with the API.
 - Key Features:
     - **Users:** Create, update, delete users, and manage their friend lists.
