@@ -1,4 +1,5 @@
 import { Schema, model, Types } from 'mongoose';
+import { format } from 'date-fns';
 const reactionSchema = new Schema({
     reactionId: {
         type: Schema.Types.ObjectId,
@@ -16,14 +17,19 @@ const reactionSchema = new Schema({
     createdAt: {
         type: Date,
         default: () => new Date(),
-        get: (timestamp) => timestamp,
     },
 }, {
     toJSON: {
         virtuals: true,
         getters: true,
+        transform: (_doc, ret) => {
+            if (ret.createdAt) {
+                ret.createdAt = format(ret.createdAt, "MMMM dd, yyyy 'at' hh:mm a");
+            }
+            return ret;
+        },
     },
-    _id: false,
+    id: false,
 });
 const thoughtSchema = new Schema({
     thoughtText: {
@@ -35,7 +41,6 @@ const thoughtSchema = new Schema({
     createdAt: {
         type: Date,
         default: () => new Date(),
-        get: (timestamp) => timestamp,
     },
     username: {
         type: String,
@@ -48,8 +53,16 @@ const thoughtSchema = new Schema({
     toJSON: {
         getters: true,
         virtuals: true,
+        transform: (_doc, ret) => {
+            delete ret.__v; // Remove __v field
+            if (ret.createdAt) {
+                ret.createdAt = format(ret.createdAt, "MMMM dd, yyyy 'at' hh:mm a");
+            }
+            return ret;
+        },
     },
-    timestamps: true,
+    id: false,
+    timestamps: false,
 });
 thoughtSchema
     .virtual('reactionCount')

@@ -46,8 +46,13 @@ const userSchema = new Schema<IUser>(
         toJSON: {
             getters: true,
             virtuals: true,
+            transform: (_doc, ret) => {
+                delete ret.__v; // Remove __v field
+                return ret;
+            },
         },
-        timestamps: true
+        id: false,
+        timestamps: false,
     },
 );
 

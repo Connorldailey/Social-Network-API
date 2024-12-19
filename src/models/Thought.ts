@@ -1,4 +1,5 @@
 import { Schema, model, Document, Types } from 'mongoose';
+import { format } from 'date-fns';
 
 interface IReaction extends Document {
     reactionId: Schema.Types.ObjectId,
@@ -32,15 +33,20 @@ const reactionSchema = new Schema<IReaction>(
         createdAt: {
             type: Date,
             default: () => new Date(),
-            get: (timestamp: Date) => timestamp,
         },
     }, 
     {
         toJSON: {
             virtuals: true,
             getters: true,
+            transform: (_doc, ret) => {
+                if (ret.createdAt) {
+                    ret.createdAt = format(ret.createdAt, "MMMM dd, yyyy 'at' hh:mm a");
+                }
+                return ret;
+            },
         },
-        _id: false,
+        id: false,
     },
 );
 
@@ -54,8 +60,7 @@ const thoughtSchema = new Schema<IThought>(
         },
         createdAt: {
             type: Date,
-            default: () => new Date(),
-            get: (timestamp: Date) => timestamp,          
+            default: () => new Date(),      
         },
         username: {
             type: String,
@@ -69,8 +74,16 @@ const thoughtSchema = new Schema<IThought>(
         toJSON: {
             getters: true,
             virtuals: true,
+            transform: (_doc, ret) => {
+                delete ret.__v; // Remove __v field
+                if (ret.createdAt) {
+                    ret.createdAt = format(ret.createdAt, "MMMM dd, yyyy 'at' hh:mm a");
+                }
+                return ret;
+            },
         },
-        timestamps: true,
+        id: false,
+        timestamps: false,
     },
 );
 

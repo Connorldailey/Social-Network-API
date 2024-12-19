@@ -35,8 +35,13 @@ const userSchema = new Schema({
     toJSON: {
         getters: true,
         virtuals: true,
+        transform: (_doc, ret) => {
+            delete ret.__v; // Remove __v field
+            return ret;
+        },
     },
-    timestamps: true
+    id: false,
+    timestamps: false,
 });
 userSchema
     .virtual('friendCount')
